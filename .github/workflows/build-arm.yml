@@ -1,0 +1,27 @@
+name: Build ARM
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install cross compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-linux-gnueabihf cmake libsdl2-dev:armhf
+          sudo dpkg --add-architecture armhf
+          sudo apt-get update
+          sudo apt-get install -y libsdl2-dev:armhf libsdl2-mixer-dev:armhf libsdl2-net-dev:armhf
+          
+      - name: Build
+        run: |
+          cmake -DCMAKE_TOOLCHAIN_FILE=cmake/arm-toolchain.cmake .
+          make -j4
+          
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: chocolate-doom-arm
+          path: src/chocolate-doom
