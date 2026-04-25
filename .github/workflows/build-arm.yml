@@ -15,7 +15,7 @@ jobs:
           docker run --rm --platform linux/arm/v7 \
             -v ${{ github.workspace }}:/src \
             -w /src \
-            arm32v7/debian:bullseye \
+            arm32v7/ubuntu:16.04 \
             bash -c "
               apt-get update &&
               apt-get install -y gcc cmake make libsdl2-dev &&
