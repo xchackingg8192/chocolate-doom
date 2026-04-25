@@ -21,7 +21,7 @@ jobs:
           make -j4
           
       - name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: chocolate-doom-arm
           path: src/chocolate-doom
