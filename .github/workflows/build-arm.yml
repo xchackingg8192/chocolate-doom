@@ -23,7 +23,7 @@ jobs:
               cmake .. -DCMAKE_BUILD_TYPE=Release -DENABLE_SDL2_MIXER=0 -DENABLE_SDL2_NET=0 &&
               make -j2 chocolate-doom &&
               mkdir -p /src/libs &&
-              cp /usr/lib/arm-linux-gnueabihf/libSDL2-2.0.so.0 /src/libs/
+              ldd /src/build/src/chocolate-doom | grep '=>' | awk '{print \$3}' | xargs -I{} cp {} /src/libs/
             "
 
       - name: Upload
