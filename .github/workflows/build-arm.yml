@@ -10,14 +10,12 @@ jobs:
       - name: Install cross compiler and deps
         run: |
           sudo apt-get update
-          sudo dpkg --add-architecture armhf
-          sudo apt-get update
           sudo apt-get install -y \
             gcc-arm-linux-gnueabihf \
             cmake \
-            libsdl2-dev:armhf \
-            libsdl2-mixer-dev:armhf \
-            libsdl2-net-dev:armhf \
+            libsdl2-dev \
+            libsdl2-mixer-dev \
+            libsdl2-net-dev \
             pkg-config
 
       - name: Build
@@ -27,7 +25,7 @@ jobs:
             -DCMAKE_SYSTEM_NAME=Linux \
             -DCMAKE_SYSTEM_PROCESSOR=armv7 \
             -DCMAKE_C_COMPILER=arm-linux-gnueabihf-gcc \
-            -DCMAKE_FIND_ROOT_PATH=/usr/arm-linux-gnueabihf
+            -DCMAKE_CXX_COMPILER=arm-linux-gnueabihf-g++
           make -j4
 
       - name: Upload binary
