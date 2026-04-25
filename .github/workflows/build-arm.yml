@@ -18,9 +18,9 @@ jobs:
             arm32v7/ubuntu:22.04 \
             bash -c "
               apt-get update &&
-              apt-get install -y gcc cmake make libsdl2-dev libsdl2-mixer-dev libsdl2-net-dev &&
+              apt-get install -y gcc cmake make libsdl2-dev &&
               mkdir -p build && cd build &&
-              cmake .. -DCMAKE_BUILD_TYPE=Release &&
+              cmake .. -DCMAKE_BUILD_TYPE=Release -DENABLE_SDL_MIXER=0 -DENABLE_SDL_NET=0 &&
               make -j2 chocolate-doom
             "
 
