@@ -21,11 +21,15 @@ jobs:
               apt-get install -y gcc cmake make libsdl2-dev &&
               mkdir -p build && cd build &&
               cmake .. -DCMAKE_BUILD_TYPE=Release -DENABLE_SDL2_MIXER=0 -DENABLE_SDL2_NET=0 &&
-              make -j2 chocolate-doom
+              make -j2 chocolate-doom &&
+              mkdir -p /src/libs &&
+              cp /usr/lib/arm-linux-gnueabihf/libSDL2-2.0.so.0 /src/libs/
             "
 
-      - name: Upload binary
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: chocolate-doom-armhf
-          path: build/src/chocolate-doom
+          path: |
+            build/src/chocolate-doom
+            libs/
