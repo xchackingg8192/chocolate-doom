@@ -1,48 +1,52 @@
-name: chocolate-doom-ppc
+name: chocolate-doom-ppc-xbox360
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install toolchain
+      - name: Install dependencies
         run: |
           sudo apt update
           sudo apt install -y \
-            git build-essential \
+            git build-essential autoconf automake libtool \
             gcc-powerpc-linux-gnu g++-powerpc-linux-gnu \
-            libsdl1.2-dev autoconf automake
+            libsdl1.2-dev libsdl-mixer1.2-dev
 
       - name: Clone Chocolate Doom
         run: |
           git clone https://github.com/chocolate-doom/chocolate-doom.git
 
-      - name: Build configure
+      - name: Prepare build
         run: |
           cd chocolate-doom
           ./autogen.sh
 
-      - name: Configure (no OpenGL, PPC)
+      - name: Configure for PowerPC (OLD Linux compatible)
         run: |
           cd chocolate-doom
           ./configure \
             --host=powerpc-linux-gnu \
+            --disable-sdl2 \
             --disable-opengl \
-            --with-sdl
+            --without-x \
+            CFLAGS="-O2 -static" \
+            LDFLAGS="-static"
 
-      - name: Compile
+      - name: Build
         run: |
           cd chocolate-doom
           make -j2
 
-      - name: Upload binary
+      - name: Strip binary
+        run: |
+          powerpc-linux-gnu-strip chocolate-doom/src/chocolate-doom
+
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: chocolate-doom-ppc
+          name: chocolate-doom-ppc-xenon
           path: chocolate-doom/src/chocolate-doom
