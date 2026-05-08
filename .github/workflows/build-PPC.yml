@@ -1,0 +1,48 @@
+name: chocolate-doom-ppc
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            git build-essential \
+            gcc-powerpc-linux-gnu g++-powerpc-linux-gnu \
+            libsdl1.2-dev autoconf automake
+
+      - name: Clone Chocolate Doom
+        run: |
+          git clone https://github.com/chocolate-doom/chocolate-doom.git
+
+      - name: Build configure
+        run: |
+          cd chocolate-doom
+          ./autogen.sh
+
+      - name: Configure (no OpenGL, PPC)
+        run: |
+          cd chocolate-doom
+          ./configure \
+            --host=powerpc-linux-gnu \
+            --disable-opengl \
+            --with-sdl
+
+      - name: Compile
+        run: |
+          cd chocolate-doom
+          make -j2
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocolate-doom-ppc
+          path: chocolate-doom/src/chocolate-doom
